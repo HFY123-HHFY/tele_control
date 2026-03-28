@@ -2,6 +2,7 @@
 #define __KEY_H
 
 #include "sys.h"
+#include "OLED.h"
 
 #define KEY1 PAout(5)
 #define KEY2 PBout(0)
@@ -14,10 +15,11 @@
 #define KEY8 PBout(5)
 
 void Key_Init(void);
-uint8_t Key_GetNum(void);
 void Key_Tick(void);
+void key_Get(void);
 
 extern uint8_t Key;
-void key_Get(void);
+extern uint8_t Mode;
+
 
 #endif

@@ -1,5 +1,9 @@
 #include "AD.h"
 
+// OLED_Printf(0, 48, OLED_8X16, "%0.1f", percentage);
+// OLED_ShowChar(34,48,'%',OLED_8X16);
+// OLED_Printf(64, 48, OLED_8X16, "%0.1fV", Voltage);
+
 int8_t L_H = 0, R_H = 0 ,R_Z = 0; // 摇杆
 uint8_t L_Z = 0; // 摇杆Z轴，油门
 float percentage = 0, Voltage = 0;		//百分比，电压
@@ -129,7 +133,7 @@ uint8_t CalculateSuccessRatio(uint8_t SendFlag)
 void rocker_Get(void)	
 {
 	uint16_t L_ADC0 = 0; // 油门
-	uint16_t L_ADC1 = 0, R_ADC4 = 0, R_ADC3 = 0, ADValue;
+	uint16_t L_ADC1 = 0, R_ADC4 = 0, R_ADC3 = 0, ADValue = 0;
 
 	L_ADC0 = AD_GetValue(ADC_Channel_0); // 获取油门ADC
 	L_ADC1 = AD_GetValue(ADC_Channel_1);

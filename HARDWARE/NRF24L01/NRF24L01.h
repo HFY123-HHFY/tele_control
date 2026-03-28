@@ -20,6 +20,7 @@ extern uint8_t NRF24L01_Flag;								//NRF24L01通信标志位
 extern uint8_t SendFlag;								//发送标志位
 extern uint8_t ReceiveFlag;							//接收标志位
 extern uint8_t communication_quality;					//通信质量
+extern float Pitch, Roll, Yaw, Angle_XY, alt;
 /***********外部可调用全局数组*/
 
 
@@ -47,7 +48,8 @@ uint8_t NRF24L01_Send(void);
 uint8_t NRF24L01_Receive(void);
 void NRF24L01_UpdateRxAddress(void);
 
-void NRF24L01_Data(void);
+void NRF24L01_TX_Data(void);
+void NRF24L01_RX_Data(void);
 
 /*********************函数声明*/
 

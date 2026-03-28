@@ -1,14 +1,15 @@
 #include "Key.h"
 
-uint8_t Key_Num = 0;
-uint8_t Key = 0;
+static uint8_t Key_Num = 0;
+uint8_t Key = 0; // 按键状态
+uint8_t Mode = 0; // 模式状态,0不回传数据，1回传数据
 
 void Key_Init(void)
 {
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE); 
 	
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);
-  GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);
+  	GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);
 	
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
 
@@ -104,6 +105,9 @@ void key_Get(void)
 	if(KeyNum)
 	{
 		Key = KeyNum;
-		KeyNum = 0;
+	}
+	if (KeyNum == 5)
+	{
+		Mode = !Mode; // 切换模式
 	}
 }

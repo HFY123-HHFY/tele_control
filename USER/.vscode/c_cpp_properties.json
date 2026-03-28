@@ -22,7 +22,8 @@
                 "D:\\kei5_39\\MDK_539\\ARM\\ARMCC\\include\\arm_linux_compat",
                 "D:\\kei5_39\\MDK_539\\ARM\\ARMCC\\include\\rw",
                 "d:\\103_project\\tele_control\\CORE",
-                "d:\\103_project\\tele_control\\STM32F10x_FWLib\\src"
+                "d:\\103_project\\tele_control\\STM32F10x_FWLib\\src",
+                "d:\\103_project\\tele_control"
             ],
             "defines": [
                 "STM32F10X_MD",

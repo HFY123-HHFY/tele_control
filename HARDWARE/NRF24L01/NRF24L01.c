@@ -709,12 +709,12 @@ uint8_t SendFlag = 0;								//发送标志位
 uint8_t ReceiveFlag = 0;							//接收标志位
 uint8_t communication_quality = 0;					//通信质量
 
-//数据包发送接收刷新:
-void NRF24L01_Data(void)
+//数据包发送刷新:
+void NRF24L01_TX_Data(void)
 {
 	if (NRF24L01_Flag == 1)
 	{
-		NRF24L01_TxPacket[0]  = 0x00; // 发送第一个数据包ID，改数据包为：控制数据包
+		NRF24L01_TxPacket[0]  = Mode; // 控制数据包发送模式
 		NRF24L01_TxPacket[1]  = Key; // 按键状态
 		NRF24L01_TxPacket[2]  = L_Z; // 油门
 		// NRF24L01_TxPacket[3]  = R_H; // 右边摇杆的横向
@@ -723,18 +723,33 @@ void NRF24L01_Data(void)
 
 		SendFlag = NRF24L01_Send(); // 发送数据包，并获取发送状态
 		communication_quality = CalculateSuccessRatio(SendFlag); // 根据发送状态计算通信质量
-		// if(SendFlag == 1)
-		// {
-		// 	Key = 0; // 发送成功，清除按键状态	
-		// }
 		
 		NRF24L01_Flag = 0; // 发送完成，清除通信标志位
+	}
+}
 
-// 接收数据包并处理		
-		ReceiveFlag = NRF24L01_Receive();
-		if(ReceiveFlag)
+float Pitch = 0.0f, Roll = 0.0f, Yaw = 0.0f, Angle_XY = 0.0f, alt = 0.0f;
+
+//数据包接收刷新:
+void NRF24L01_RX_Data(void)
+{
+	ReceiveFlag = NRF24L01_Receive();
+	if(ReceiveFlag)
+	{
+		uint8_t ID = NRF24L01_RxPacket[0];
+		if (ID == 0x02) // 检测是否为回传数据包ID
 		{
-				
+			float Pitch_temp = *(float *)&NRF24L01_RxPacket[4];
+			float Roll_temp = *(float *)&NRF24L01_RxPacket[8];
+			float Yaw_temp = *(float *)&NRF24L01_RxPacket[12];
+			float Angle_XY_temp = *(float *)&NRF24L01_RxPacket[16];
+			float alt_temp = *(float *)&NRF24L01_RxPacket[20];
+
+			Pitch = Pitch_temp;
+			Roll = Roll_temp;
+			Yaw = Yaw_temp;
+			Angle_XY = Angle_XY_temp;
+			alt = alt_temp;
 		}
 	}
 }
