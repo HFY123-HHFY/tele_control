@@ -21,6 +21,7 @@ extern uint8_t SendFlag;								//发送标志位
 extern uint8_t ReceiveFlag;							//接收标志位
 extern uint8_t communication_quality;					//通信质量
 extern float Pitch, Roll, Yaw, Angle_XY, alt;
+extern uint16_t speed_temp;
 /***********外部可调用全局数组*/
 
 

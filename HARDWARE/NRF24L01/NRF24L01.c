@@ -729,6 +729,7 @@ void NRF24L01_TX_Data(void)
 }
 
 float Pitch = 0.0f, Roll = 0.0f, Yaw = 0.0f, Angle_XY = 0.0f, alt = 0.0f;
+uint16_t speed_temp = 0;
 
 //数据包接收刷新:
 void NRF24L01_RX_Data(void)
@@ -739,6 +740,8 @@ void NRF24L01_RX_Data(void)
 		uint8_t ID = NRF24L01_RxPacket[0];
 		if (ID == 0x02) // 检测是否为回传数据包ID
 		{
+			speed_temp = (uint16_t)NRF24L01_RxPacket[1] | ((uint16_t)NRF24L01_RxPacket[2] << 8);
+
 			float Pitch_temp = *(float *)&NRF24L01_RxPacket[4];
 			float Roll_temp = *(float *)&NRF24L01_RxPacket[8];
 			float Yaw_temp = *(float *)&NRF24L01_RxPacket[12];
