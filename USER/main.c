@@ -12,8 +12,7 @@ int main(void)
 	{		
 		//printf("%d\r\n", timer);
 		
-		LED1 = 1;
-		LED2 = 1;
+		LED1 = 1;	LED2 = 1;
 		
 		key_Get();
 		rocker_Get(); // 获取摇杆的值
@@ -34,11 +33,10 @@ int main(void)
 		OLED_Printf(46, 16, OLED_6X8, "R%.1f", Roll); // 横滚角
 		OLED_Printf(88, 16, OLED_6X8, "Y%.1f", Yaw); // 偏航角
 
-		OLED_Printf(0, 54, OLED_6X8, "Q:%.1f", Angle_XY); // 俯仰角
-		OLED_Printf(48, 54, OLED_6X8, "B:%.1f", alt); // 横滚角
+		OLED_Printf(0, 32, OLED_6X8, "P_O:%.1f", pid_pitch_output); // 俯仰角PID输出
+		OLED_Printf(64, 32, OLED_6X8, "R_O:%.1f", pid_roll_output); // 横滚角PID输出
 
-		OLED_Printf(0, 32, OLED_8X16, "%d", speed_temp);
-		OLED_Printf(64, 32, OLED_8X16, "L_Z:%d", L_Z);
+		OLED_Printf(54, 54, OLED_6X8, "%d", speed_temp); // 回传的速度
 
 		OLED_Update();
 	}

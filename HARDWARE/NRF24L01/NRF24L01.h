@@ -20,7 +20,7 @@ extern uint8_t NRF24L01_Flag;								//NRF24L01通信标志位
 extern uint8_t SendFlag;								//发送标志位
 extern uint8_t ReceiveFlag;							//接收标志位
 extern uint8_t communication_quality;					//通信质量
-extern float Pitch, Roll, Yaw, Angle_XY, alt;
+extern float Pitch, Roll, Yaw, pid_pitch_output, pid_roll_output; // 接收的姿态角和PID输出
 extern uint16_t speed_temp;
 /***********外部可调用全局数组*/
 
