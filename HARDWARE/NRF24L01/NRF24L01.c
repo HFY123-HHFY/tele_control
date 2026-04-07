@@ -728,7 +728,7 @@ void NRF24L01_TX_Data(void)
 	}
 }
 
-float Pitch = 0.0f, Roll = 0.0f, Yaw = 0.0f, Angle_XY = 0.0f, alt = 0.0f;
+float Pitch = 0.0f, Roll = 0.0f, Yaw = 0.0f, pid_pitch_output = 0.0f, pid_roll_output = 0.0f;
 uint16_t speed_temp = 0;
 
 //数据包接收刷新:
@@ -745,14 +745,14 @@ void NRF24L01_RX_Data(void)
 			float Pitch_temp = *(float *)&NRF24L01_RxPacket[4];
 			float Roll_temp = *(float *)&NRF24L01_RxPacket[8];
 			float Yaw_temp = *(float *)&NRF24L01_RxPacket[12];
-			float Angle_XY_temp = *(float *)&NRF24L01_RxPacket[16];
-			float alt_temp = *(float *)&NRF24L01_RxPacket[20];
+			float pid_pitch_output_temp = *(float *)&NRF24L01_RxPacket[16];
+			float pid_roll_output_temp = *(float *)&NRF24L01_RxPacket[20];
 
 			Pitch = Pitch_temp;
 			Roll = Roll_temp;
 			Yaw = Yaw_temp;
-			Angle_XY = Angle_XY_temp;
-			alt = alt_temp;
+			pid_pitch_output = pid_pitch_output_temp;
+			pid_roll_output = pid_roll_output_temp;
 		}
 	}
 }
