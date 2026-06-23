@@ -3,7 +3,7 @@
  * Auto generated Run-Time-Environment Configuration File
  *      *** Do not modify ! ***
  *
- * Project: 'temp' 
+ * Project: 'tele_control' 
  * Target:  'Target 1' 
  */
 

@@ -704,7 +704,7 @@ void NRF24L01_UpdateRxAddress(void)
 
 /*********************功能函数*/
 
-uint8_t NRF24L01_Flag = 0;								//NRF24L01通信标志位
+uint8_t NRF24L01_Flag = 0;							//NRF24L01通信标志位
 uint8_t SendFlag = 0;								//发送标志位
 uint8_t ReceiveFlag = 0;							//接收标志位
 uint8_t communication_quality = 0;					//通信质量
@@ -728,8 +728,11 @@ void NRF24L01_TX_Data(void)
 	}
 }
 
-float Pitch = 0.0f, Roll = 0.0f, Yaw = 0.0f, pid_pitch_output = 0.0f, pid_roll_output = 0.0f;
-uint16_t speed_temp = 0;
+float Pitch = 0.0f, Roll = 0.0f, Yaw = 0.0f, alt = 0.0f;
+float pid_pitch_output = 0.0f, pid_roll_output = 0.0f, pid_alt_output = 0.0f;
+
+uint16_t speed_temp = 0U;
+// uint16_t Motor_Output[4] = {48U, 48U, 48U, 48U}; /* 电机输出值 - 用于存储最终的DShot油门值 */
 
 //数据包接收刷新:
 void NRF24L01_RX_Data(void)
@@ -738,21 +741,33 @@ void NRF24L01_RX_Data(void)
 	if(ReceiveFlag)
 	{
 		uint8_t ID = NRF24L01_RxPacket[0];
-		if (ID == 0x02) // 检测是否为回传数据包ID
+		if (ID == 0x01) // 检测是否为回传数据包ID
 		{
 			speed_temp = (uint16_t)NRF24L01_RxPacket[1] | ((uint16_t)NRF24L01_RxPacket[2] << 8);
 
 			float Pitch_temp = *(float *)&NRF24L01_RxPacket[4];
 			float Roll_temp = *(float *)&NRF24L01_RxPacket[8];
 			float Yaw_temp = *(float *)&NRF24L01_RxPacket[12];
-			float pid_pitch_output_temp = *(float *)&NRF24L01_RxPacket[16];
-			float pid_roll_output_temp = *(float *)&NRF24L01_RxPacket[20];
+			float alt_temp = *(float *)&NRF24L01_RxPacket[16];
+
+			float pid_pitch_output_temp = *(float *)&NRF24L01_RxPacket[20];
+			float pid_roll_output_temp = *(float *)&NRF24L01_RxPacket[24];
+			float pid_alt_output_temp = *(float *)&NRF24L01_RxPacket[28];
 
 			Pitch = Pitch_temp;
 			Roll = Roll_temp;
 			Yaw = Yaw_temp;
+			alt = alt_temp;
+
 			pid_pitch_output = pid_pitch_output_temp;
 			pid_roll_output = pid_roll_output_temp;
+			pid_alt_output = pid_alt_output_temp;
+
+			/*24~31 字节：4 路电机输出（uint16_t，低字节在前）*/
+			// Motor_Output[0] = (uint16_t)NRF24L01_RxPacket[24] | ((uint16_t)NRF24L01_RxPacket[25] << 8);
+			// Motor_Output[1] = (uint16_t)NRF24L01_RxPacket[26] | ((uint16_t)NRF24L01_RxPacket[27] << 8);
+			// Motor_Output[2] = (uint16_t)NRF24L01_RxPacket[28] | ((uint16_t)NRF24L01_RxPacket[29] << 8);
+			// Motor_Output[3] = (uint16_t)NRF24L01_RxPacket[30] | ((uint16_t)NRF24L01_RxPacket[31] << 8);
 		}
 	}
 }
