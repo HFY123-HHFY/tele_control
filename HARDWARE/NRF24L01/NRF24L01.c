@@ -717,6 +717,7 @@ void NRF24L01_TX_Data(void)
 		NRF24L01_TxPacket[0]  = Mode; // 控制数据包发送模式
 		NRF24L01_TxPacket[1]  = Key; // 按键状态
 		NRF24L01_TxPacket[2]  = L_Z; // 油门
+		*(float *)&NRF24L01_TxPacket[4] = Set_Alt; // 发送高度变化
 		// NRF24L01_TxPacket[3]  = R_H; // 右边摇杆的横向
 		// NRF24L01_TxPacket[4]  = R_Z; // 右边摇杆的纵向
 		// NRF24L01_TxPacket[5]  = L_H; // 左边摇杆的横向

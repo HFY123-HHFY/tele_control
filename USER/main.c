@@ -35,8 +35,9 @@ int main(void)
 
 		OLED_Printf(0, 42, OLED_6X8, "G:%.1f", alt); // 高度
 		OLED_Printf(64, 42, OLED_6X8, "G_O:%.1f", pid_alt_output); // 高度PID输出
-		OLED_Printf(64, 56, OLED_6X8, "%d", speed_temp); // 回传的基础速度
 
+		OLED_Printf(0, 56, OLED_6X8, "A:%.1f", Set_Alt); // 高度变化
+		OLED_Printf(64, 56, OLED_6X8, "%d", speed_temp); // 回传的基础速度
 		OLED_Printf(100,56,OLED_6X8,"%d",communication_quality*10); //通信质量
 		OLED_ShowChar(120,56,'%',OLED_6X8);
 
