@@ -25,6 +25,13 @@ int main(void)
 			key_Get(); // 获取按键的值
 		}
 
+		if (NRF_Flag == 1)
+		{
+			NRF_Flag = 0;
+			NRF24L01_TX_Data(); // 发送数据包
+			NRF24L01_RX_Data(); // 接收数据包
+		}
+
 		/* 人机交互: OLED刷新 */
 		if(OLED_Flag == 1)
 		{
