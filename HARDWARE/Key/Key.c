@@ -3,7 +3,6 @@
 static uint8_t Key_Num = 0;
 uint8_t Key = 0; // 按键状态
 uint8_t Mode = 0; // 模式状态,0不回传数据，1回传数据
-float Set_Alt = 0.0f; // 按键控制的高度变化 
 
 void Key_Init(void)
 {
@@ -113,21 +112,5 @@ void key_Get(void)
 	if (KeyNum == 5)
 	{
 		Mode = !Mode; // 切换模式
-	}
-
-	// 按键6：高度增加 0.1m
-	if (KeyNum == 6)
-	{
-		Set_Alt += 0.1f;
-	}
-	
-	// 按键8：高度减少 0.1m
-	if (KeyNum == 8)
-	{
-		Set_Alt -= 0.1f;
-		if (Set_Alt < 0.0f) // 最低高度为0
-		{
-			Set_Alt = 0.0f;
-		}
 	}
 }

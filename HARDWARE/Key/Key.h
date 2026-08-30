@@ -20,6 +20,5 @@ void key_Get(void);
 
 extern uint8_t Key;
 extern uint8_t Mode;
-extern float Set_Alt; // 按键控制的高度变化 
 
 #endif

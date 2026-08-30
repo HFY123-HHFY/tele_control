@@ -704,7 +704,6 @@ void NRF24L01_UpdateRxAddress(void)
 
 /*********************功能函数*/
 
-uint8_t NRF24L01_Flag = 0;							//NRF24L01通信标志位
 uint8_t SendFlag = 0;								//发送标志位
 uint8_t ReceiveFlag = 0;							//接收标志位
 uint8_t communication_quality = 0;					//通信质量
@@ -712,63 +711,30 @@ uint8_t communication_quality = 0;					//通信质量
 //数据包发送刷新:
 void NRF24L01_TX_Data(void)
 {
-	if (NRF24L01_Flag == 1)
-	{
-		NRF24L01_TxPacket[0]  = Mode; // 控制数据包发送模式
-		NRF24L01_TxPacket[1]  = Key; // 按键状态
-		NRF24L01_TxPacket[2]  = L_Z; // 油门
-		*(float *)&NRF24L01_TxPacket[4] = Set_Alt; // 发送高度变化
-		// NRF24L01_TxPacket[3]  = R_H; // 右边摇杆的横向
-		// NRF24L01_TxPacket[4]  = R_Z; // 右边摇杆的纵向
-		// NRF24L01_TxPacket[5]  = L_H; // 左边摇杆的横向
+	NRF24L01_TxPacket[0]  = Key; // 按键状态
+	NRF24L01_TxPacket[1]  = L_Z; // 油门	
+	NRF24L01_TxPacket[2]  = R_Z; // 右边摇杆的纵向
+	// NRF24L01_TxPacket[3]  = R_H; // 右边摇杆的横向
+	// NRF24L01_TxPacket[4]  = L_H; // 左边摇杆的横向
 
-		SendFlag = NRF24L01_Send(); // 发送数据包，并获取发送状态
-		communication_quality = CalculateSuccessRatio(SendFlag); // 根据发送状态计算通信质量
-		
-		NRF24L01_Flag = 0; // 发送完成，清除通信标志位
-	}
+	SendFlag = NRF24L01_Send(); // 发送数据包，并获取发送状态
+	communication_quality = CalculateSuccessRatio(SendFlag); // 根据发送状态计算通信质量
 }
 
-float Pitch = 0.0f, Roll = 0.0f, Yaw = 0.0f, alt = 0.0f;
-float pid_pitch_output = 0.0f, pid_roll_output = 0.0f, pid_alt_output = 0.0f;
-
-uint16_t speed_temp = 0U;
-// uint16_t Motor_Output[4] = {48U, 48U, 48U, 48U}; /* 电机输出值 - 用于存储最终的DShot油门值 */
+/* 接收到的姿态角 */
+float Pitch = 0.0f, Roll = 0.0f;
 
 //数据包接收刷新:
 void NRF24L01_RX_Data(void)
 {
 	ReceiveFlag = NRF24L01_Receive();
-	if(ReceiveFlag)
+	if (ReceiveFlag != 1)
 	{
-		uint8_t ID = NRF24L01_RxPacket[0];
-		if (ID == 0x01) // 检测是否为回传数据包ID
-		{
-			speed_temp = (uint16_t)NRF24L01_RxPacket[1] | ((uint16_t)NRF24L01_RxPacket[2] << 8);
-
-			float Pitch_temp = *(float *)&NRF24L01_RxPacket[4];
-			float Roll_temp = *(float *)&NRF24L01_RxPacket[8];
-			float Yaw_temp = *(float *)&NRF24L01_RxPacket[12];
-			float alt_temp = *(float *)&NRF24L01_RxPacket[16];
-
-			float pid_pitch_output_temp = *(float *)&NRF24L01_RxPacket[20];
-			float pid_roll_output_temp = *(float *)&NRF24L01_RxPacket[24];
-			float pid_alt_output_temp = *(float *)&NRF24L01_RxPacket[28];
-
-			Pitch = Pitch_temp;
-			Roll = Roll_temp;
-			Yaw = Yaw_temp;
-			alt = alt_temp;
-
-			pid_pitch_output = pid_pitch_output_temp;
-			pid_roll_output = pid_roll_output_temp;
-			pid_alt_output = pid_alt_output_temp;
-
-			/*24~31 字节：4 路电机输出（uint16_t，低字节在前）*/
-			// Motor_Output[0] = (uint16_t)NRF24L01_RxPacket[24] | ((uint16_t)NRF24L01_RxPacket[25] << 8);
-			// Motor_Output[1] = (uint16_t)NRF24L01_RxPacket[26] | ((uint16_t)NRF24L01_RxPacket[27] << 8);
-			// Motor_Output[2] = (uint16_t)NRF24L01_RxPacket[28] | ((uint16_t)NRF24L01_RxPacket[29] << 8);
-			// Motor_Output[3] = (uint16_t)NRF24L01_RxPacket[30] | ((uint16_t)NRF24L01_RxPacket[31] << 8);
-		}
+		return;
 	}
+	float Pitch_temp = *(float *)&NRF24L01_RxPacket[0];
+	float Roll_temp  = *(float *)&NRF24L01_RxPacket[4];
+
+	Pitch = Pitch_temp;
+	Roll = Roll_temp;
 }
