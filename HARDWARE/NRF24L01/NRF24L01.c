@@ -703,17 +703,16 @@ void NRF24L01_UpdateRxAddress(void)
 }
 
 /*********************功能函数*/
-
-uint8_t SendFlag = 0;								//发送标志位
-uint8_t ReceiveFlag = 0;							//接收标志位
-uint8_t communication_quality = 0;					//通信质量
+static uint8_t SendFlag = 0;							//发送标志位
+static uint8_t ReceiveFlag = 0;							//接收标志位
+volatile uint8_t communication_quality = 0;				//通信质量
 
 //数据包发送刷新:
 void NRF24L01_TX_Data(void)
 {
 	NRF24L01_TxPacket[0]  = Key; // 按键状态
 	NRF24L01_TxPacket[1]  = L_Z; // 油门	
-	NRF24L01_TxPacket[2]  = R_Z; // 右边摇杆的纵向
+	NRF24L01_TxPacket[2] = (uint8_t)R_Z;
 	// NRF24L01_TxPacket[3]  = R_H; // 右边摇杆的横向
 	// NRF24L01_TxPacket[4]  = L_H; // 左边摇杆的横向
 
@@ -722,19 +721,26 @@ void NRF24L01_TX_Data(void)
 }
 
 /* 接收到的姿态角 */
-float Pitch = 0.0f, Roll = 0.0f;
-
+volatile float Pitch = 0.0f, Roll = 0.0f;
+volatile float pid_pitch_output = 0.0f, pid_roll_output = 0.0f;
 //数据包接收刷新:
 void NRF24L01_RX_Data(void)
 {
+	static float Pitch_temp = 0.0f, Roll_temp = 0.0f;
+	static float pid_pitch_output_temp = 0.0f, pid_roll_output_temp = 0.0f;
+
 	ReceiveFlag = NRF24L01_Receive();
 	if (ReceiveFlag != 1)
 	{
 		return;
 	}
-	float Pitch_temp = *(float *)&NRF24L01_RxPacket[0];
-	float Roll_temp  = *(float *)&NRF24L01_RxPacket[4];
+	Pitch_temp = *(float *)&NRF24L01_RxPacket[0];
+	Roll_temp  = *(float *)&NRF24L01_RxPacket[4];
+	pid_pitch_output_temp = *(float *)&NRF24L01_RxPacket[8];
+	pid_roll_output_temp  = *(float *)&NRF24L01_RxPacket[12];
 
 	Pitch = Pitch_temp;
 	Roll = Roll_temp;
+	pid_pitch_output = pid_pitch_output_temp;
+	pid_roll_output = pid_roll_output_temp;
 }

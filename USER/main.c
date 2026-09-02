@@ -10,9 +10,6 @@ int main(void)
 	
 	while (1)
 	{
-		//printf("%d\r\n", timer);
-		// LED1 = 1;	LED2 = 1;
-		
 		if (ADC_Flag == 1)
 		{
 			ADC_Flag = 0;
@@ -44,11 +41,13 @@ int main(void)
 			OLED_Printf(100,0,OLED_6X8,"%.0f",L_Z*0.4); // 油门百分比
 			OLED_ShowChar(120,0,'%',OLED_6X8);
 
-			OLED_Printf(0,  14, OLED_6X8,  "P%.1f", Pitch); // 俯仰角
-			OLED_Printf(46, 14, OLED_6X8, "R%.1f",   Roll); // 横滚角
+			OLED_Printf(0,  14, OLED_6X8, "P%.1f", Pitch); // 俯仰角
+			OLED_Printf(46, 14, OLED_6X8, "R%.1f", Roll); // 横滚角
+			OLED_Printf(104, 14, OLED_6X8, "%d",    R_Z); // 右边摇杆纵向
 
-			OLED_Printf(0, 28, OLED_6X8,  "%d", R_Z); // 右边摇杆纵向
-			OLED_Printf(46, 28, OLED_6X8, "%d", R_H); // 右边摇杆横向
+			OLED_Printf(0,  28, OLED_6X8, "P_O:%.1f", pid_pitch_output); // 俯仰角
+			OLED_Printf(64, 28, OLED_6X8, "R_O:%.1f", pid_roll_output); // 横滚角
+
 			OLED_Update();
 		}
 	}

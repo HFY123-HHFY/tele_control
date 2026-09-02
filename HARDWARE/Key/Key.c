@@ -1,8 +1,7 @@
 #include "Key.h"
 
 static uint8_t Key_Num = 0;
-uint8_t Key = 0; // 按键状态
-uint8_t Mode = 0; // 模式状态,0不回传数据，1回传数据
+volatile uint8_t Key = 0; // 按键状态
 
 void Key_Init(void)
 {
@@ -106,11 +105,5 @@ void key_Get(void)
 	if(KeyNum)
 	{
 		Key = KeyNum; // 记录当前按下的键值
-	}
-
-	// 按键5：切换模式
-	if (KeyNum == 5)
-	{
-		Mode = !Mode; // 切换模式
 	}
 }

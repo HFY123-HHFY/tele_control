@@ -1,12 +1,7 @@
 #include "AD.h"
 
-// OLED_Printf(0, 48, OLED_8X16, "%0.1f", percentage);
-// OLED_ShowChar(34,48,'%',OLED_8X16);
-// OLED_Printf(64, 48, OLED_8X16, "%0.1fV", Voltage);
-
-int8_t L_H = 0, R_H = 0 ,R_Z = 0; // 摇杆
-uint8_t L_Z = 0; // 摇杆Z轴，油门
-float percentage = 0, Voltage = 0;		//百分比，电压
+volatile int8_t L_H = 0, R_H = 0 ,R_Z = 0; // 摇杆
+volatile uint8_t L_Z = 0; // 摇杆Z轴，油门
 
 void AD_Init(void)
 {
@@ -17,7 +12,7 @@ void AD_Init(void)
 	
 	GPIO_InitTypeDef GPIO_InitStructure;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_3 | GPIO_Pin_4;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 		
@@ -133,18 +128,15 @@ uint8_t CalculateSuccessRatio(uint8_t SendFlag)
 void rocker_Get(void)	
 {
 	uint16_t L_ADC0 = 0; // 油门
-	uint16_t L_ADC1 = 0, R_ADC4 = 0, R_ADC3 = 0, ADValue = 0;
+	uint16_t L_ADC1 = 0, R_ADC4 = 0, R_ADC3 = 0;
 
 	L_ADC0 = AD_GetValue(ADC_Channel_0); // 获取油门ADC
 	L_ADC1 = AD_GetValue(ADC_Channel_1);
 	R_ADC4 = AD_GetValue(ADC_Channel_4);
 	R_ADC3 = AD_GetValue(ADC_Channel_3);
-	ADValue = AD_GetValue(ADC_Channel_2); // 获取电压ADC
 	
-	L_Z = DataProcess_2(L_ADC0); // 油门 范围0-250
+	L_Z =  DataProcess_2(L_ADC0); // 油门 范围0-250
 	L_H = -DataProcess(L_ADC1);
 	R_H = -DataProcess(R_ADC3);
-	R_Z	= DataProcess(R_ADC4);
-	Voltage = (float)ADValue / 4095 * 3.3;		//获取电压
-	percentage = (Voltage - 1.65) * 222.22;   //获取百分比
+	R_Z	=  DataProcess(R_ADC4);
 }

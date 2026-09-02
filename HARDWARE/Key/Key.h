@@ -18,7 +18,6 @@ void Key_Init(void);
 void Key_Tick(void);
 void key_Get(void);
 
-extern uint8_t Key;
-extern uint8_t Mode;
+extern volatile uint8_t Key;
 
 #endif

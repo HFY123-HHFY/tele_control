@@ -16,6 +16,6 @@
 
 void Bsp_Init(void);
 
-extern uint32_t timer;
+extern  volatile uint32_t timer;
 
 #endif
