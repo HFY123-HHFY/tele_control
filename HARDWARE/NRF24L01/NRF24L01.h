@@ -20,7 +20,8 @@ extern uint8_t NRF24L01_Flag;						//NRF24L01通信标志位
 extern volatile uint8_t communication_quality;		//通信质量
 extern volatile float Pitch, Roll;
 extern volatile float pid_pitch_output, pid_roll_output;
-// extern volatile uint16_t Motor_Output[4];
+extern volatile uint32_t Height;
+
 /***********外部可调用全局数组*/
 
 

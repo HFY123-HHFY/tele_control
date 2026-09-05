@@ -722,12 +722,17 @@ void NRF24L01_TX_Data(void)
 
 /* 接收到的姿态角 */
 volatile float Pitch = 0.0f, Roll = 0.0f;
+/* 接收到的姿态角PID输出 */
 volatile float pid_pitch_output = 0.0f, pid_roll_output = 0.0f;
+/* 接收到的高度值 */
+volatile uint32_t Height = 0;
+
 //数据包接收刷新:
 void NRF24L01_RX_Data(void)
 {
 	static float Pitch_temp = 0.0f, Roll_temp = 0.0f;
 	static float pid_pitch_output_temp = 0.0f, pid_roll_output_temp = 0.0f;
+	static uint32_t Height_temp = 0;
 
 	ReceiveFlag = NRF24L01_Receive();
 	if (ReceiveFlag != 1)
@@ -738,9 +743,11 @@ void NRF24L01_RX_Data(void)
 	Roll_temp  = *(float *)&NRF24L01_RxPacket[4];
 	pid_pitch_output_temp = *(float *)&NRF24L01_RxPacket[8];
 	pid_roll_output_temp  = *(float *)&NRF24L01_RxPacket[12];
+	Height_temp = *(uint32_t *)&NRF24L01_RxPacket[16];
 
 	Pitch = Pitch_temp;
 	Roll = Roll_temp;
 	pid_pitch_output = pid_pitch_output_temp;
 	pid_roll_output = pid_roll_output_temp;
+	Height = Height_temp;
 }

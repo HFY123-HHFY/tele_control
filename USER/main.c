@@ -48,6 +48,8 @@ int main(void)
 			OLED_Printf(0,  28, OLED_6X8, "P_O:%.1f", pid_pitch_output); // 俯仰角
 			OLED_Printf(64, 28, OLED_6X8, "R_O:%.1f", pid_roll_output); // 横滚角
 
+			OLED_Printf(0,  42, OLED_6X8, "H:%.2f", (double)((float)Height/ 1000.0f)); // 高度值
+
 			OLED_Update();
 		}
 	}
