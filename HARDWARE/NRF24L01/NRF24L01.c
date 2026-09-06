@@ -710,11 +710,11 @@ volatile uint8_t communication_quality = 0;				//通信质量
 //数据包发送刷新:
 void NRF24L01_TX_Data(void)
 {
-	NRF24L01_TxPacket[0]  = Key; // 按键状态
-	NRF24L01_TxPacket[1]  = L_Z; // 油门	
-	NRF24L01_TxPacket[2] = (uint8_t)R_Z;
-	// NRF24L01_TxPacket[3]  = R_H; // 右边摇杆的横向
-	// NRF24L01_TxPacket[4]  = L_H; // 左边摇杆的横向
+	NRF24L01_TxPacket[0] = Key; // 按键状态
+	NRF24L01_TxPacket[1] = L_Z; // 油门	
+	NRF24L01_TxPacket[2] = (uint8_t)L_H; // 左边摇杆的横向
+	NRF24L01_TxPacket[3] = (uint8_t)R_H; // 右边摇杆的横向
+	NRF24L01_TxPacket[4] = (uint8_t)R_Z; // 右边摇杆的纵向
 
 	SendFlag = NRF24L01_Send(); // 发送数据包，并获取发送状态
 	communication_quality = CalculateSuccessRatio(SendFlag); // 根据发送状态计算通信质量
@@ -722,17 +722,17 @@ void NRF24L01_TX_Data(void)
 
 /* 接收到的姿态角 */
 volatile float Pitch = 0.0f, Roll = 0.0f;
-/* 接收到的姿态角PID输出 */
-volatile float pid_pitch_output = 0.0f, pid_roll_output = 0.0f;
 /* 接收到的高度值 */
 volatile uint32_t Height = 0;
+/* 接收到的光流数据 */
+volatile int16_t OpticalFlow_X = 0.0, OpticalFlow_Y = 0.0;
 
 //数据包接收刷新:
 void NRF24L01_RX_Data(void)
 {
 	static float Pitch_temp = 0.0f, Roll_temp = 0.0f;
-	static float pid_pitch_output_temp = 0.0f, pid_roll_output_temp = 0.0f;
 	static uint32_t Height_temp = 0;
+	static int16_t OpticalFlow_X_temp = 0, OpticalFlow_Y_temp = 0;
 
 	ReceiveFlag = NRF24L01_Receive();
 	if (ReceiveFlag != 1)
@@ -741,13 +741,13 @@ void NRF24L01_RX_Data(void)
 	}
 	Pitch_temp = *(float *)&NRF24L01_RxPacket[0];
 	Roll_temp  = *(float *)&NRF24L01_RxPacket[4];
-	pid_pitch_output_temp = *(float *)&NRF24L01_RxPacket[8];
-	pid_roll_output_temp  = *(float *)&NRF24L01_RxPacket[12];
-	Height_temp = *(uint32_t *)&NRF24L01_RxPacket[16];
+	Height_temp = *(uint32_t *)&NRF24L01_RxPacket[8];
+	OpticalFlow_X_temp = *(int16_t *)&NRF24L01_RxPacket[12];
+	OpticalFlow_Y_temp = *(int16_t *)&NRF24L01_RxPacket[14];
 
 	Pitch = Pitch_temp;
 	Roll = Roll_temp;
-	pid_pitch_output = pid_pitch_output_temp;
-	pid_roll_output = pid_roll_output_temp;
 	Height = Height_temp;
+	OpticalFlow_X = OpticalFlow_X_temp;
+	OpticalFlow_Y = OpticalFlow_Y_temp;
 }

@@ -43,12 +43,14 @@ int main(void)
 
 			OLED_Printf(0,  14, OLED_6X8, "P%.1f", Pitch); // 俯仰角
 			OLED_Printf(46, 14, OLED_6X8, "R%.1f", Roll); // 横滚角
-			OLED_Printf(104, 14, OLED_6X8, "%d",    R_Z); // 右边摇杆纵向
 
-			OLED_Printf(0,  28, OLED_6X8, "P_O:%.1f", pid_pitch_output); // 俯仰角
-			OLED_Printf(64, 28, OLED_6X8, "R_O:%.1f", pid_roll_output); // 横滚角
+			OLED_Printf(0,  28, OLED_6X8, "H:%.2f", (double)((float)Height/ 1000.0f)); // 高度值
+			OLED_Printf(46, 28, OLED_6X8, "X:%d", OpticalFlow_X); // 光流数据
+			OLED_Printf(92, 28, OLED_6X8, "Y:%d", OpticalFlow_Y); // 光流数据
 
-			OLED_Printf(0,  42, OLED_6X8, "H:%.2f", (double)((float)Height/ 1000.0f)); // 高度值
+			OLED_Printf(0, 42, OLED_6X8, "HO:%d", L_H);
+			OLED_Printf(46, 42, OLED_6X8, "X:%d", R_H);
+			OLED_Printf(92, 42, OLED_6X8, "Y:%d", R_Z);
 
 			OLED_Update();
 		}
