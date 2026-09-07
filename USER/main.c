@@ -34,6 +34,7 @@ int main(void)
 		{
 			OLED_Flag = 0;
 			OLED_Clear();
+
 			OLED_Printf(0,0,OLED_6X8,"T:%d",timer); //程序运行时间
 			OLED_Printf(36,0,OLED_6X8,"K:%d",Key); // 按键状态
 			OLED_Printf(64,0,OLED_6X8,"%d",communication_quality*10); //通信质量
@@ -51,6 +52,10 @@ int main(void)
 			OLED_Printf(0, 42, OLED_6X8, "HO:%d", L_H);
 			OLED_Printf(46, 42, OLED_6X8, "X:%d", R_H);
 			OLED_Printf(92, 42, OLED_6X8, "Y:%d", R_Z);
+
+			OLED_Printf(0,  56, OLED_6X8, "A%d,P%d", Alt_Active,Pos_Active); /* 定高环, 定点环 */
+			OLED_Printf(46, 56, OLED_6X8, "FQ:%d", flow_quality); /* 光流质量 */
+			OLED_Printf(92,  56, OLED_6X8, "T%d,F%d", tof_status,flow_status); /* 测距数据是否可用，光流数据是否可用 */
 
 			OLED_Update();
 		}

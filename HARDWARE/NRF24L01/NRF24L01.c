@@ -726,6 +726,12 @@ volatile float Pitch = 0.0f, Roll = 0.0f;
 volatile uint32_t Height = 0;
 /* 接收到的光流数据 */
 volatile int16_t OpticalFlow_X = 0.0, OpticalFlow_Y = 0.0;
+/* 接收到的定高定点环生效标志位 1=生效中，0=休眠/未锚定/贴地（飞控侧实时状态） */
+volatile uint8_t Alt_Active = 0; /* 定高环 */
+volatile uint8_t Pos_Active = 0; /* 定点环 */
+volatile uint8_t flow_quality = 0; /* 光流质量：数值越大表示光流数据可信度越高 */
+volatile uint8_t flow_status = 0;  /* 光流状态：1 = 光流数据可用  */
+volatile uint8_t tof_status = 0;   /* 测距状态：1 = 测距数据可用    */
 
 //数据包接收刷新:
 void NRF24L01_RX_Data(void)
@@ -733,6 +739,8 @@ void NRF24L01_RX_Data(void)
 	static float Pitch_temp = 0.0f, Roll_temp = 0.0f;
 	static uint32_t Height_temp = 0;
 	static int16_t OpticalFlow_X_temp = 0, OpticalFlow_Y_temp = 0;
+	static uint8_t Alt_Active_temp = 0, Pos_Active_temp = 0, flow_quality_temp = 0;
+	static uint8_t flow_status_temp = 0, tof_status_temp = 0;
 
 	ReceiveFlag = NRF24L01_Receive();
 	if (ReceiveFlag != 1)
@@ -744,10 +752,20 @@ void NRF24L01_RX_Data(void)
 	Height_temp = *(uint32_t *)&NRF24L01_RxPacket[8];
 	OpticalFlow_X_temp = *(int16_t *)&NRF24L01_RxPacket[12];
 	OpticalFlow_Y_temp = *(int16_t *)&NRF24L01_RxPacket[14];
+	Alt_Active_temp = NRF24L01_RxPacket[16];
+	Pos_Active_temp = NRF24L01_RxPacket[17];
+	flow_quality_temp = NRF24L01_RxPacket[18];
+	flow_status_temp = NRF24L01_RxPacket[19];
+	tof_status_temp = NRF24L01_RxPacket[20];
 
 	Pitch = Pitch_temp;
 	Roll = Roll_temp;
 	Height = Height_temp;
 	OpticalFlow_X = OpticalFlow_X_temp;
 	OpticalFlow_Y = OpticalFlow_Y_temp;
+	Alt_Active = Alt_Active_temp;
+	Pos_Active = Pos_Active_temp;
+	flow_quality = flow_quality_temp;
+	flow_status = flow_status_temp;
+	tof_status = tof_status_temp;
 }

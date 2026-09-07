@@ -21,9 +21,10 @@ extern volatile uint8_t communication_quality;		//通信质量
 extern volatile float Pitch, Roll;
 extern volatile uint32_t Height;
 extern volatile int16_t OpticalFlow_X, OpticalFlow_Y;
+extern volatile uint8_t Alt_Active, Pos_Active,  flow_quality; /* 定高环、定点环、光流质量 */
+extern volatile uint8_t flow_status, tof_status;  /* 光流状态：1 = 光流数据可用, 测距状态：1 = 测距数据可用 */
 
 /***********外部可调用全局数组*/
-
 
 /*函数声明*********************/
 
